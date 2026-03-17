@@ -1,38 +1,79 @@
 # Candidate Submission Template
 
 ## Candidate Information
-- Full Name:
-- Email:
-- LinkedIn or Portfolio:
-- Submission Date:
+- Full Name: Aiman
+- Email: [Add your email]
+- LinkedIn or Portfolio: [Add your profile link]
+- Submission Date: March 17, 2026
 
 ## Task 1: Intermediate Airtable Skills
 
 ### 1. Full Name Formula
-Provide the formula used to concatenate the First Name and Last Name fields.
+```airtable
+TRIM({First Name} & " " & {Last Name})
+```
 
 ### 2. Cleaned Email Formula
-Provide the formula used to clean the Email Input.
+```airtable
+LOWER(TRIM({Email Input}))
+```
 
 ### 3. Status Categorization Formula
-Provide the formula logic for categorizing the new hires.
+```airtable
+IF(
+	{Amount Spent on Equipment} > 1000,
+	"High Value",
+	IF(
+		{Amount Spent on Equipment} >= 500,
+		"Medium Value",
+		"Low Value"
+	)
+)
+```
 
 ### 4. Days Since Created Formula
-Provide the formula logic for calculating days since the new hire record was created.
+```airtable
+DATETIME_DIFF(TODAY(), {Created Date}, 'days')
+```
+
+Detailed Task 1 write-up: `submissions/task1_solution.md`
 
 ## Task 2: Advanced Airtable Automation
 
 ### 1. Automation Steps
-Describe the steps taken to build the automation (trigger, Slack/Email notification, tracking log, conditional branching).
+1. Trigger when a `New Hires` record matches condition `{Status} = "High Value"`.
+2. Validate contact quality using an `Email Valid` formula field.
+3. If valid, send HR notification (Email/Slack) with dynamic candidate details.
+4. Create a record in `Tracking Table` for high-value onboarding tracking.
+5. If missing/invalid email, branch to exception path and flag record for HR data correction.
+6. Update source record field (e.g., `Automation Status = Processed`) to prevent duplicate actions.
 
 ### 2. Interface Design
-Include screenshots of the interface and provide a brief explanation of the layout.
+Interface includes:
+- Summary tiles for High/Medium/Low hire counts
+- Filtered grid for High Value hires
+- Record detail panel for onboarding review
+- Department and status filters for HR triage
+
+Screenshots are included in submission assets (base/table setup, formulas, automation, dashboard).
 
 ### 3. Formula Logic
-Provide any formula logic used in Task 2 for automation.
+```airtable
+IF(
+	REGEX_MATCH(LOWER(TRIM({Email Input})), "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$"),
+	1,
+	0
+)
+```
 
 ### 4. Assumptions
-List any assumptions or decisions made during the task.
+- Equipment amount field is numeric and available.
+- Created date exists for all records.
+- Notification channel (Email or Slack) is configured for HR.
+- Tracking table schema is prepared before automation is activated.
+- Record status updates are used to avoid duplicate processing.
 
 ### 5. Optional Notes
-Anything else you'd like us to know.
+The project demonstrates Airtable as a lightweight HR operations platform that combines data processing, automation workflows, and dashboard visibility for onboarding teams.
+
+Detailed Task 2 write-up: `submissions/task2_solution.md`
